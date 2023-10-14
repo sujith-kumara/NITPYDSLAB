@@ -89,18 +89,51 @@ void printQueue(PriorityQueue* pq) {
 
 int main() {
     PriorityQueue* pq = createPriorityQueue();
+    int choice;
 
-    Task task1 = createTask("Complete project A", 3);
-    Task task2 = createTask("Prepare presentation", 1);
-    Task task3 = createTask("Write report", 2);
+    while (1) {
+        printf("\nMenu:\n");
+        printf("1. Enqueue a task\n");
+        printf("2. Dequeue a task\n");
+        printf("3. Print tasks\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
 
-    enqueue(pq, task1);
-    enqueue(pq, task2);
-    enqueue(pq, task3);
+        switch (choice) {
+            case 1:
+                printf("Enter task description: ");
+                char description[100];
+                int priority;
+                scanf(" %99[^\n]", description); // Read up to 99 characters until a newline
+                printf("Enter task priority: ");
+                scanf("%d", &priority);
+                Task task = createTask(description, priority);
+                enqueue(pq, task);
+                printf("Task enqueued.\n");
+                break;
 
-    while (!isEmpty(pq)) {
-        Task next_task = dequeue(pq);
-        printf("Task: %s, Priority: %d\n", next_task.description, next_task.priority);
+            case 2:
+                if (!isEmpty(pq)) {
+                    Task next_task = dequeue(pq);
+                    printf("Dequeued Task: %s, Priority: %d\n", next_task.description, next_task.priority);
+                } else {
+                    printf("Queue is empty.\n");
+                }
+                break;
+
+            case 3:
+                printf("Tasks in the queue:\n");
+                printQueue(pq);
+                break;
+
+            case 4:
+                printf("Exiting program.\n");
+                return 0;
+
+            default:
+                printf("Invalid choice. Please try again.\n");
+        }
     }
 
     return 0;
