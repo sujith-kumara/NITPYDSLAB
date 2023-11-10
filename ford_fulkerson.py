@@ -77,9 +77,7 @@ sink = 5
 # Print the max flow
 print("Max Flow: %d " % g.ford_fulkerson(source, sink))
 g = Graph(graph2)
-# Define the source and sink nodes
 source = 0
 sink = 5
 
-# Print the max flow
 print("Max Flow: %d " % g.ford_fulkerson(source, sink))
