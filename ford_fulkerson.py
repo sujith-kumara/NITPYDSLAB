@@ -51,23 +51,32 @@ class Graph:
         return max_flow
 
 # Create a sample network graph as a matrix
-#graph = [
- #   [0, 8, 0, 0, 3, 0],
-  #  [0, 0, 9, 0, 0, 0],
-   # [0, 0, 0, 0, 7, 2],
-   # [0, 0, 0, 0, 0, 5],
-    #[0, 0, 7, 4, 0, 0],
-    #[0, 0, 0, 0, 0, 0],
-#]
-graph = [[0, 16, 13, 0, 0, 0],
+graph1 = [
+    [0, 8, 0, 0, 3, 0],
+    [0, 0, 9, 0, 0, 0],
+    [0, 0, 0, 0, 7, 2],
+    [0, 0, 0, 0, 0, 5],
+    [0, 0, 7, 4, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+]
+graph2 = [[0, 16, 13, 0, 0, 0],
         [0, 0, 10, 12, 0, 0],
         [0, 4, 0, 0, 14, 0],
         [0, 0, 9, 0, 0, 20],
         [0, 0, 0, 7, 0, 4],
         [0, 0, 0, 0, 0, 0]]
-# Create a Graph object with the matrix
-g = Graph(graph)
 
+# Create a Graph object with the matrix
+g = Graph(graph1)
+
+
+# Define the source and sink nodes
+source = 0
+sink = 5
+
+# Print the max flow
+print("Max Flow: %d " % g.ford_fulkerson(source, sink))
+g = Graph(graph2)
 # Define the source and sink nodes
 source = 0
 sink = 5
