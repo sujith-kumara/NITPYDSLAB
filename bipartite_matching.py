@@ -1,73 +1,65 @@
-# Python program to find 
-# maximal Bipartite matching.
+class BipartiteGraph:
+    def __init__(self, graph):
+        self.graph = graph
+        self.U = len(graph)
+        self.V = max(max(graph.values(), key=lambda x: max(x, default=0)), default=0) + 1
+        self.pair_U = [-1] * self.U
+        self.pair_V = [-1] * self.V
+        self.dist = [float('inf')] * self.U
 
-class GFG:
-	def __init__(self,graph):
-		
-		# residual graph
-		self.graph = graph 
-		self.ppl = len(graph)
-		self.jobs = len(graph[0])
+  
 
-	# A DFS based recursive function
-	# that returns true if a matching 
-	# for vertex u is possible
-	def bpm(self, u, matchR, seen):
+    def bfs(self):
+        queue = []
+        for u in range(self.U):
+            if self.pair_U[u] == -1:
+                self.dist[u] = 0
+                queue.append(u)
+            else:
+                self.dist[u] = float('inf')
 
-		# Try every job one by one
-		for v in range(self.jobs):
+        self.dist[-1] = float('inf')
 
-			# If applicant u is interested 
-			# in job v and v is not seen
-			if self.graph[u][v] and seen[v] == False:
-				
-				# Mark v as visited
-				seen[v] = True
+        while queue:
+            u = queue.pop(0)
 
-				'''If job 'v' is not assigned to
-				an applicant OR previously assigned 
-				applicant for job v (which is matchR[v]) 
-				has an alternate job available. 
-				Since v is marked as visited in the 
-				above line, matchR[v] in the following
-				recursive call will not get job 'v' again'''
-				if matchR[v] == -1 or self.bpm(matchR[v], 
-											matchR, seen):
-					matchR[v] = u
-					return True
-		return False
+            if self.dist[u] < self.dist[-1]:
+                for v in self.graph[u]:
+                    if self.dist[self.pair_V[v]] == float('inf'):
+                        self.dist[self.pair_V[v]] = self.dist[u] + 1
+                        queue.append(self.pair_V[v])
 
-	# Returns maximum number of matching 
-	def maxBPM(self):
-		'''An array to keep track of the 
-		applicants assigned to jobs. 
-		The value of matchR[i] is the 
-		applicant number assigned to job i, 
-		the value -1 indicates nobody is assigned.'''
-		matchR = [-1] * self.jobs
-		
-		# Count of jobs assigned to applicants
-		result = 0
-		for i in range(self.ppl):
-			
-			# Mark all jobs as not seen for next applicant.
-			seen = [False] * self.jobs
-			
-			# Find if the applicant 'u' can get a job
-			if self.bpm(i, matchR, seen):
-				result += 1
-		return result
+        return self.dist[-1] != float('inf')
+
+    def dfs(self, u):
+        if u != -1:
+            for v in self.graph[u]:
+                if self.dist[self.pair_V[v]] == self.dist[u] + 1 and self.dfs(self.pair_V[v]):
+                    self.pair_V[v] = u
+                    self.pair_U[u] = v
+                    return True
+            self.dist[u] = float('inf')
+            return False
+        return True
+
+    def hopcroft_karp(self):
+        matching = 0
+        while self.bfs():
+            for u in range(self.U):
+                if self.pair_U[u] == -1 and self.dfs(u):
+                    matching += 1
+        return matching
 
 
-bpGraph =[[0, 1, 1, 0, 0, 0],
-		[1, 0, 0, 1, 0, 0],
-		[0, 0, 1, 0, 0, 0],
-		[0, 0, 1, 1, 0, 0],
-		[0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 1]]
+# Example usage:
+graph = {
+    0: [1, 2],
+    1: [0, 2],
+    2: [0, 1, 3],
+    3: [2]
+}
 
-g = GFG(bpGraph)
+bipartite_graph = BipartiteGraph(graph)
+max_matching = bipartite_graph.hopcroft_karp()
 
-print ("Maximum number of applicants that can get job is %d " % g.maxBPM())
-
-# This code is contributed by Neelam Yadav
+print("Maximum Bipartite Matching:", max_matching)
